@@ -1,0 +1,121 @@
+.App {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.App-header {
+  background-color: #ffffff; /* White background for the main content area */
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 40px;
+  width: 100%;
+  max-width: 800px; /* Max width for better readability */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  color: #2c3e50; /* Darker heading color */
+  margin-bottom: 10px;
+}
+
+p {
+  color: #34495e; /* Slightly lighter text color */
+  margin-bottom: 20px;
+}
+
+.text-area {
+  width: 100%; /* Full width within its container */
+  max-width: 600px;
+  padding: 12px;
+  font-size: 16px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  resize: vertical; /* Allow vertical resizing */
+}
+
+button {
+  background-color: #3498db; /* A pleasant blue for the button */
+  color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #2980b9;
+}
+
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.error-message {
+  color: #e74c3c; /* Red for error messages */
+  margin-top: 15px;
+  font-weight: bold;
+}
+
+.result-box {
+  text-align: left;
+  margin-top: 30px;
+  background-color: #ecf0f1; /* Light gray background for results */
+  border: 1px solid #bdc3c7;
+  border-radius: 8px;
+  padding: 25px;
+  width: 100%;
+  max-width: 700px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.result-box h3 {
+  color: #2c3e50;
+  margin-top: 0;
+  margin-bottom: 15px;
+  border-bottom: 1px solid #bdc3c7;
+  padding-bottom: 10px;
+}
+
+.result-box p, .result-box li, .result-box dd {
+  color: #34495e;
+  line-height: 1.6;
+}
+
+.result-box ul {
+  list-style-type: disc;
+  margin-left: 20px;
+  padding-left: 0;
+}
+
+.result-box li {
+  margin-bottom: 8px;
+}
+
+.result-box dt {
+  font-weight: bold;
+  margin-top: 10px;
+  color: #2c3e50;
+}
+
+.result-box dd {
+  margin-left: 20px;
+  margin-bottom: 5px;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #eee;
+  margin: 20px 0;
+}
