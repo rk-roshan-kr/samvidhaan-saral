@@ -1,101 +1,142 @@
-Samvidhaan Saral 🇮🇳⚖️
-Samvidhaan Saral ("Simplified Constitution") is a web application that uses Google's Generative AI to demystify complex legal documents, starting with the Constitution of India. It transforms dense legal jargon into simple, understandable explanations, empowering every citizen to understand their rights and the laws that govern them.
+# Samvidhaan Saral 🇮🇳⚖️
 
-This project was built for the Gen AI Exchange Hackathon.
+**Samvidhaan Saral** (Hindi for “Constitution – Simplified”) is a full-stack AI application that **transforms dense legal prose into everyday language** so that every Indian citizen can effortlessly understand their rights and the laws that protect them.
 
-(Feel free to replace this placeholder image with a real screenshot or GIF of your working application.)
+Built during the **Gen AI Exchange Hackathon**, the project combines a modern React UI, a lightweight Flask API, and Google Gemini 1.5 Flash to deliver clear, structured explanations of any legal passage – starting with the Constitution of India.
 
-## Key Features
-AI-Powered Simplification: Leverages the Gemini AI model to translate complex legal text into plain English.
+---
 
-Structured Analysis: Provides more than just a summary. The output includes:
+## ✨ Core Features
 
-A Simplified Explanation of the text.
+| Capability | Description |
+|------------|-------------|
+| **AI-Powered Simplification** | Gemini translates legal text into plain, concise English. |
+| **Structured Output** | The response includes: **Simplified Explanation · Key Points · Defined Terms · Legal References**. |
+| **GPT-style Interface** | A single input bar with smooth animations; results appear below without page reloads. |
+| **Secure API** | Backend validates requests, protects your Gemini key via server-side calls, and supports rate-limiting. |
+| **Responsive Design** | Works beautifully on desktop, tablet, and mobile. |
 
-A bulleted list of Key Points.
+---
 
-A glossary of Defined Terms found within the text.
+## 🏗 Architecture Overview
 
-Interactive UI: A clean, responsive interface built with React for a seamless user experience.
+```
+┌──────────┐     POST /api/simplify      ┌──────────────┐
+│ Frontend │ ───────────────────────────▶│ Flask API    │
+│ React    │◀── JSON response ────────── │ /analysis    │
+└──────────┘                             │ Gemini Proxy │
+      ▲                                   └─────▲──────┘
+      │                                         │
+User enters text                         Google Gemini LLM
+```
 
-Secure & Scalable Backend: A robust Flask backend with API key authentication and rate limiting to prevent abuse.
+1. **React Frontend** (./samvidhaan-saral/frontend) – collects input, displays results with smooth transitions.
+2. **Flask Backend** (app.py) – exposes `/api/simplify`, forwards the text to Gemini, post-processes the response.
+3. **Gemini 1.5 Flash** – large language model that performs the heavy-lifting NLP.
 
-## Tech Stack
-Frontend: React.js, HTML, CSS
+---
 
-Backend: Python, Flask
+## 📂 Folder Structure (simplified)
 
-AI Engine: Google Gemini 1.5 Flash API
+```
+ samvidhaan-saral-main/
+ ├── app.py               # Flask entry-point
+ ├── .env                 # Gemini API key (NOT committed)
+ └── frontend/            # React client
+     ├── public/
+     └── src/
+         ├── components/  # Header, InputForm, AnalysisResult …
+```
 
-Database: MongoDB
+---
 
-Deployment: Docker, AWS (planned)
-
-## Setup and Installation
-To get a local copy up and running, follow these simple steps.
+## 🚀 Getting Started
 
 ### Prerequisites
-Python 3.8+
+* Python 3.8+
+* Node.js 16+
+* A Google AI (Gemini) API Key
 
-Node.js and npm
+### 1. Clone & Setup
+```bash
+# Clone repo
+$ git clone https://github.com/rk-roshan-kr/samvidhaan-saral.git
+$ cd samvidhaan-saral
+```
 
-A Google AI (Gemini) API Key
+### 2. Backend (Flask)
+```bash
+# Create virtual-env
+$ python -m venv venv
+$ source venv/bin/activate   # Windows: .\.venv\Scripts\activate
 
-### Installation
-Clone the repository:
+# Install deps
+(venv) $ pip install -r requirements.txt  # or pip install flask openai google-generativeai
+```
 
-Bash
+Create **.env** in the project root:
+```
+GOOGLE_API_KEY=your_google_api_key_here
+```
 
-git clone https://github.com/rk-roshan-kr/samvidhaan-saral.git
-cd samvidhaan-saral
-Setup the Backend:
+### 3. Frontend (React)
+```bash
+$ cd frontend
+$ npm install
+```
 
-Bash
+### 4. Run Locally
+Open **two terminals**:
+```bash
+# Terminal 1 – Flask API
+$ python app.py          # → http://127.0.0.1:5000
 
-# Create and activate a Python virtual environment
-python -m venv venv
-source venv/bin/activate # On Windows, use `.\venv\Scripts\activate`
+# Terminal 2 – React dev-server
+$ cd frontend
+$ npm start              # → http://localhost:3000
+```
+Visit `localhost:3000`, paste any legal text, and press **Analyze**.
 
-# Install Python dependencies
-pip install -r requirements.txt 
-(Note: You may need to create a requirements.txt file using pip freeze > requirements.txt)
+---
 
-Setup the Frontend:
+## 📑 API Reference
+| Endpoint | Method | Payload |
+|----------|--------|---------|
+| `/api/simplify` | POST | `{ "text": "string" }` |
 
-Bash
+Response sample:
+```json
+{
+  "simplifiedText": "…",
+  "keyPoints": ["…"],
+  "definedTerms": { "term": "definition" },
+  "legalReferences": ["…"]
+}
+```
 
-# Navigate to the frontend directory
-cd frontend
+---
 
-# Install npm packages
-npm install
-Configure Environment Variables:
+## 🛣️ Roadmap
+- 🔒 OAuth / user accounts for saved analyses
+- 🌐 Deploy on AWS with Docker & CI-CD
+- 🇮🇳 Multilingual output (Hindi, regional languages)
+- 💡 Explain Judgements & Bills in addition to the Constitution
 
-In the root directory (samvidhaan-saral/), create a file named .env.
+---
 
-Add your Google Gemini API key to this file:
+## 🤝 Contributing
+Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
 
-GOOGLE_API_KEY=your_google_ai_api_key_here
-## How to Run
-You will need two terminals running simultaneously.
+1. Fork the repo
+2. Create your feature branch (`git checkout -b feature/foo`)
+3. Commit changes (`git commit -m 'Add amazing feature'`)
+4. Push (`git push origin feature/foo`)
+5. Open a PR
 
-Start the Backend Server:
+---
 
-From the root directory (samvidhaan-saral/):
-
-Bash
-
-python app.py
-The backend will be running at http://127.0.0.1:5000.
-
-Start the Frontend Application:
-
-From the frontend/ directory:
-
-Bash
-
-npm start
-The application will open in your browser at http://localhost:3000.
+## © License
+This project is released under the **MIT License**.
 
 
 

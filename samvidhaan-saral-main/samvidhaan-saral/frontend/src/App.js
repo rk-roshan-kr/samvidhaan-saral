@@ -1,12 +1,16 @@
-// frontend/src/App.js
 import React, { useState } from 'react';
 import './App.css';
+import Header from './components/Header';
+import InputForm from './components/InputForm';
+import AnalysisResult from './components/AnalysisResult';
+import DotGrid from './components/dotbackground';
 
 function App() {
   const [inputText, setInputText] = useState('');
   const [analysisResult, setAnalysisResult] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [isEditing, setIsEditing] = useState(true); // True when input is active/centered, false when result is shown/input is at bottom
 
   const handleSimplifyClick = async () => {
     if (!inputText) {
@@ -14,7 +18,7 @@ function App() {
       return;
     }
     setIsLoading(true);
-    setAnalysisResult(null);
+    setAnalysisResult(null); // Clear previous result
     setError('');
 
     try {
@@ -38,7 +42,8 @@ function App() {
       }
 
       setAnalysisResult(data);
-
+      setIsEditing(false); // Switch to "result shown" mode
+      
     } catch (err) {
       console.error("Fetch error:", err);
       setError(err.message || 'Failed to fetch analysis. Please check the backend server and console for details.');
@@ -47,70 +52,63 @@ function App() {
     }
   };
 
+  // When user clicks input box AFTER a result is shown, revert to editing mode and hide result
+  const handleInputFocus = () => {
+    if (!isEditing) {
+      setIsEditing(true);
+      setAnalysisResult(null); // Clear the result when returning to editing
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Samvidhaan Saral</h1>
-        <p>Enter a legal text below to get a detailed, simplified explanation.</p>
-
-        <textarea
-          className="text-area"
-          rows="10"
-          value={inputText}
-          onChange={(e) => setInputText(e.target.value)}
-          placeholder="Paste a legal text here..."
+    <div className={`App${!isEditing ? ' analyzed' : ''}`}>
+      {/* DotGrid background at the top level, behind all content */}
+      <div style={{ width: '100%', height: '6000px', position: 'absolute', top: 0, left: 0, zIndex: 0 }}>
+        <DotGrid 
+          dotSize={4}
+          gap={20}
+          baseColor="rgba(0,0,0 , 0.3)"
+          activeColor="#5227FF"
+          proximity={70}
+          shockRadius={150}
+          shockStrength={10}
+          resistance={50}
+          returnDuration={1.05}
         />
-
-        <button onClick={handleSimplifyClick} disabled={isLoading}>
-          {isLoading ? 'Analyzing...' : 'Analyze Text'}
-        </button>
-
-        {error && <p className="error-message">{error}</p>}
-
-        {analysisResult && (
-          <div className="result-box">
-            <h3>Simplified Explanation</h3>
-            <p>{analysisResult.simplifiedText}</p>
-
-            <hr />
-
-            <h3>Key Points</h3>
-            <ul>
-              {analysisResult.keyPoints && analysisResult.keyPoints.map((point, index) => (
-                <li key={index}>{point}</li>
-              ))}
-            </ul>
-
-            <hr />
-
-            <h3>Legal References</h3>
-            {analysisResult.legalReferences && analysisResult.legalReferences.length > 0 ? (
-              <ul>
-                {analysisResult.legalReferences.map((reference, index) => (
-                  <li key={index}>{reference}</li>
-                ))}
-              </ul>
-            ) : <p>No legal references were identified.</p>}
-
-            <hr />
-
-            <h3>Defined Terms</h3>
-            {analysisResult.definedTerms && Object.keys(analysisResult.definedTerms).length > 0 ? (
-              <dl>
-                {Object.entries(analysisResult.definedTerms).map(([term, definition]) => (
-                  <React.Fragment key={term}>
-                    <dt><strong>{term}</strong></dt>
-                    <dd>{definition}</dd>
-                  </React.Fragment>
-                ))}
-              </dl>
-            ) : <p>No complex terms were identified.</p>}
+      </div>
+      <Header minimized={!isEditing} />
+      {/* Conditionally render content based on whether an analysis result exists */}
+      {analysisResult ? (
+        <>
+          <div className="result-scroll-container fade-in">
+            <AnalysisResult analysisResult={analysisResult} />
           </div>
-        )}
-      </header>
+          {/* InputForm always present, but its appearance is controlled by isEditing and CSS */}
+          <InputForm
+            inputText={inputText}
+            setInputText={setInputText}
+            handleSimplifyClick={handleSimplifyClick}
+            isLoading={isLoading}
+            error={error}
+            isEditing={isEditing} // Pass isEditing state to InputForm
+            onInputFocus={handleInputFocus}
+          />
+        </>
+      ) : (
+        <div className="input-center-container">
+          <InputForm
+            inputText={inputText}
+            setInputText={setInputText}
+            handleSimplifyClick={handleSimplifyClick}
+            isLoading={isLoading}
+            error={error}
+            isEditing={isEditing} // Pass isEditing state to InputForm
+            onInputFocus={handleInputFocus}
+          />
+        </div>
+      )}
     </div>
   );
 }
 
 export default App;
-
